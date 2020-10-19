@@ -191,7 +191,7 @@ export default {
       cursor auto
       border-color $accentColor
   .suggestions
-    background #fff
+    background #ff0000
     min-width 500px
     max-width 700px
     position absolute
