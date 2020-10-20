@@ -92,34 +92,11 @@ export default {
       if(!this.query.length) return "";
       return this.highlightText(this.query, str);
     },
-    /**
-     * Mostafa, A (2020) vuepress-plugin-flexsearch source code [Source code]. https://github.com/z3by/vuepress-plugin-flexsearch/blob/master/src/utils.js
-     * @param searchKey
-     * @param text
-     * @returns {*}
-     */
     highlightText(searchKey, text) {
       let result = text;
       let searchText = text.toLowerCase();
 
-      // Account for multi-word searches
-      let searchKeys = searchKey.toLowerCase().split(" ").filter((word) => word.length > 0);
-
-      if (searchKeys.length > 0 ) {
-        for (const key of searchKeys) {
-          let indices = this.indicesOf(searchText, key);
-          for (const index of indices) {
-            let endIndex = index + key.length;
-            result =
-                result.substring(0, index)
-                + `<span class="highlight">`
-                + result.substring(index, endIndex)
-                + `</span>`
-                + result.substring(endIndex, result.length)
-            ;
-          }
-        }
-      } else {
+      if(searchKey.length > 1) {
         let indices = this.indicesOf(searchText, searchKey.toLowerCase());
         for (const index of indices) {
           let endIndex = index + searchKey.length;
@@ -136,7 +113,7 @@ export default {
       return result;
     },
     /**
-     * jcubic (2010) How to find indices of all occurences of one string in another in Javascript? [Source code]. https://stackoverflow.com/questions/3410464/how-to-find-indices-of-all-occurrences-of-one-string-in-another-in-javascript
+     * jcubic (2010) How to find indices of all occurrences of one string in another in Javascript? [Source code]. https://stackoverflow.com/questions/3410464/how-to-find-indices-of-all-occurrences-of-one-string-in-another-in-javascript
      * Assumes same-case strings.
      * @param source
      * @param find
