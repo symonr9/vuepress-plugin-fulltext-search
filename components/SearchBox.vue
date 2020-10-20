@@ -29,7 +29,7 @@
           <div class="suggestion-row">
             <div class="page-title">{{ s.title || s.path }}</div>
             <div class="suggestion-content">
-              <div v-if="s.headingStr" class="header">{{ s.headingStr }}</div>
+              <div v-if="s.headingStr" class="header" v-html="smartHighlight(s.headingStr)"></div>
               <div v-if="s.contentStr" v-html="smartHighlight(s.contentStr)"></div>
             </div>
           </div>
@@ -91,7 +91,6 @@ export default {
     smartHighlight(str) {
       if(!this.query.length) return "";
       return this.highlightText(this.query, str);
-      // return str + `<strong>hello</strong> now!!!`;
     },
     /**
      * Mostafa, A (2020) vuepress-plugin-flexsearch source code [Source code]. https://github.com/z3by/vuepress-plugin-flexsearch/blob/master/src/utils.js
@@ -113,9 +112,9 @@ export default {
             let endIndex = index + key.length;
             result =
                 result.substring(0, index)
-                + `<strong>`
+                + `<span class="highlight">`
                 + result.substring(index, endIndex)
-                + `</strong>`
+                + `</span>`
                 + result.substring(endIndex, result.length)
             ;
           }
@@ -126,9 +125,9 @@ export default {
           let endIndex = index + searchKey.length;
           result =
               result.substring(0, index)
-              + `<strong>`
+              + `<span class="highlight">`
               + result.substring(index, endIndex)
-              + `</strong>`
+              + `</span>`
               + result.substring(endIndex, result.length)
           ;
         }
@@ -138,6 +137,7 @@ export default {
     },
     /**
      * jcubic (2010) How to find indices of all occurences of one string in another in Javascript? [Source code]. https://stackoverflow.com/questions/3410464/how-to-find-indices-of-all-occurrences-of-one-string-in-another-in-javascript
+     * Assumes same-case strings.
      * @param source
      * @param find
      * @returns {[]|*[]|*}
@@ -146,16 +146,11 @@ export default {
       if (!source) {
         return [];
       }
-      // if find is empty string return all indexes.
       if (!find) {
-        // or shorter arrow function:
-        // return source.split('').map((_,i) => i);
         return source.split('').map(function(_, i) { return i; });
       }
       var result = [];
       for (let i = 0; i < source.length; ++i) {
-        // If you want to search case insensitive use
-        // if (source.substring(i, i + find.length).toLowerCase() == find) {
         if (source.substring(i, i + find.length) == find) {
           result.push(i);
         }
@@ -264,6 +259,12 @@ export default {
     &:focus
       cursor auto
       border-color $videxColor
+  .highlight
+    background $borderColor !important
+    border-radius 0.2rem
+    padding: 2px
+    color $videxColor
+    font-weight 600
   .suggestions
     background #fff
     min-width 500px
@@ -315,7 +316,6 @@ export default {
           padding 7px
           .header
             font-weight 550
-
     &.focused
       background-color #f3f4f5
 @media (max-width: $MQNarrow)
