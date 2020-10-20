@@ -189,9 +189,9 @@ export default {
     background-size 1rem
     &:focus
       cursor auto
-      border-color $accentColor
+      border-color $videxColor
   .suggestions
-    background #ff0000
+    background #fff
     min-width 500px
     max-width 700px
     position absolute
@@ -216,7 +216,7 @@ export default {
       .parent-page-title
         color white
         font-weight 600
-        background-color $accentColor
+        background-color $videxColor
         padding 5px
 
       .suggestion-row
