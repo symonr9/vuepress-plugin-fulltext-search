@@ -30,7 +30,7 @@
             <div class="page-title">{{ s.title || s.path }}</div>
             <div class="suggestion-content">
               <div v-if="s.headingStr" class="header">{{ s.headingStr }}</div>
-              <div v-if="s.contentStr">{{ s.contentStr }}</div>
+              <div v-if="s.contentStr" v-html="smartHighlight(s.contentStr)"></div>
             </div>
           </div>
         </a>
@@ -88,6 +88,80 @@ export default {
     document.removeEventListener('keydown', this.onHotkey)
   },
   methods: {
+    smartHighlight(str) {
+      if(!this.query.length) return "";
+      return this.highlightText(this.query, str);
+      // return str + `<strong>hello</strong> now!!!`;
+    },
+    /**
+     * Mostafa, A (2020) vuepress-plugin-flexsearch source code [Source code]. https://github.com/z3by/vuepress-plugin-flexsearch/blob/master/src/utils.js
+     * @param searchKey
+     * @param text
+     * @returns {*}
+     */
+    highlightText(searchKey, text) {
+      let result = text;
+      let searchText = text.toLowerCase();
+
+      // Account for multi-word searches
+      let searchKeys = searchKey.toLowerCase().split(" ").filter((word) => word.length > 0);
+
+      if (searchKeys.length > 0 ) {
+        for (const key of searchKeys) {
+          let indices = this.indicesOf(searchText, key);
+          for (const index of indices) {
+            let endIndex = index + key.length;
+            result =
+                result.substring(0, index)
+                + `<strong>`
+                + result.substring(index, endIndex)
+                + `</strong>`
+                + result.substring(endIndex, result.length)
+            ;
+          }
+        }
+      } else {
+        let indices = this.indicesOf(searchText, searchKey.toLowerCase());
+        for (const index of indices) {
+          let endIndex = index + searchKey.length;
+          result =
+              result.substring(0, index)
+              + `<strong>`
+              + result.substring(index, endIndex)
+              + `</strong>`
+              + result.substring(endIndex, result.length)
+          ;
+        }
+      }
+
+      return result;
+    },
+    /**
+     * jcubic (2010) How to find indices of all occurences of one string in another in Javascript? [Source code]. https://stackoverflow.com/questions/3410464/how-to-find-indices-of-all-occurrences-of-one-string-in-another-in-javascript
+     * @param source
+     * @param find
+     * @returns {[]|*[]|*}
+     */
+    indicesOf(source, find) {
+      if (!source) {
+        return [];
+      }
+      // if find is empty string return all indexes.
+      if (!find) {
+        // or shorter arrow function:
+        // return source.split('').map((_,i) => i);
+        return source.split('').map(function(_, i) { return i; });
+      }
+      var result = [];
+      for (let i = 0; i < source.length; ++i) {
+        // If you want to search case insensitive use
+        // if (source.substring(i, i + find.length).toLowerCase() == find) {
+        if (source.substring(i, i + find.length) == find) {
+          result.push(i);
+        }
+      }
+      return result;
+    },
     highlight(str) {
       if (!this.queryTerms.length) return str
       return str
@@ -226,7 +300,7 @@ export default {
         .page-title
           width: 35%
           border 1px solid $borderColor
-          background: $borderColor
+          background $borderColor
           border-left none
           display table-cell
           text-align right
