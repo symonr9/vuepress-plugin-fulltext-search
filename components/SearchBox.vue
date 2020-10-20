@@ -1,28 +1,28 @@
 <template>
   <div class="search-box">
     <input
-      ref="input"
-      aria-label="Search"
-      :value="query"
-      :class="{ focused: focused }"
-      :placeholder="placeholder"
-      autocomplete="off"
-      spellcheck="false"
-      @input="query = $event.target.value"
-      @focus="focused = true"
-      @blur="focused = false"
-      @keyup.enter="go(focusIndex)"
-      @keyup.up="onUp"
-      @keyup.down="onDown"
+        ref="input"
+        aria-label="Search"
+        :value="query"
+        :class="{ focused: focused }"
+        :placeholder="placeholder"
+        autocomplete="off"
+        spellcheck="false"
+        @input="query = $event.target.value"
+        @focus="focused = true"
+        @blur="focused = false"
+        @keyup.enter="go(focusIndex)"
+        @keyup.up="onUp"
+        @keyup.down="onDown"
     />
     <ul v-if="showSuggestions" class="suggestions" :class="{ 'align-right': alignRight }" @mouseleave="unfocus">
       <li
-        v-for="(s, i) in suggestions"
-        :key="i"
-        class="suggestion"
-        :class="{ focused: i === focusIndex }"
-        @mousedown="go(i)"
-        @mouseenter="focus(i)"
+          v-for="(s, i) in suggestions"
+          :key="i"
+          class="suggestion"
+          :class="{ focused: i === focusIndex }"
+          @mousedown="go(i)"
+          @mouseenter="focus(i)"
       >
         <a :href="s.path + s.slug" @click.prevent>
           <div v-if="s.parentPageTitle" class="parent-page-title" v-html="highlight(s.parentPageTitle)" />
@@ -57,10 +57,10 @@ export default {
     queryTerms() {
       if (!this.query) return []
       const result = this.query
-        .trim()
-        .toLowerCase()
-        .split(/[^\p{L}\p{N}_]+/iu)
-        .filter(t => t)
+          .trim()
+          .toLowerCase()
+          .split(/[^\p{L}\p{N}_]+/iu)
+          .filter(t => t)
       return result
     },
     showSuggestions() {
@@ -99,9 +99,9 @@ export default {
         return
       }
       this.suggestions = await flexsearchSvc.match(
-        this.query,
-        this.queryTerms,
-        this.$site.themeConfig.searchMaxSuggestions || SEARCH_MAX_SUGGESTIONS,
+          this.query,
+          this.queryTerms,
+          this.$site.themeConfig.searchMaxSuggestions || SEARCH_MAX_SUGGESTIONS,
       )
     },
     getPageLocalePath(page) {
@@ -120,9 +120,9 @@ export default {
       }
       searchPaths = Array.isArray(searchPaths) ? searchPaths : new Array(searchPaths)
       return (
-        searchPaths.filter(path => {
-          return page.path.match(path)
-        }).length > 0
+          searchPaths.filter(path => {
+            return page.path.match(path)
+          }).length > 0
       )
     },
     onHotkey(event) {
@@ -189,7 +189,7 @@ export default {
     background-size 1rem
     &:focus
       cursor auto
-      border-color #214291
+      border-color $videxColor
   .suggestions
     background #fff
     min-width 500px
@@ -216,7 +216,7 @@ export default {
       .parent-page-title
         color white
         font-weight 600
-        background-color #214291
+        background-color $videxColor
         padding 5px
 
       .suggestion-row
@@ -226,7 +226,7 @@ export default {
         .page-title
           width: 35%
           border 1px solid $borderColor
-          background: #f5f5f5
+          background: $borderColor
           border-left none
           display table-cell
           text-align right
@@ -234,13 +234,13 @@ export default {
           font-weight 600
         .suggestion-content
           border 1px solid $borderColor
-          font-weight 400
+          font-weight 300
           border-right none
           width: 65%
           display table-cell
-          padding 5px
+          padding 7px
           .header
-            font-weight 600
+            font-weight 550
 
     &.focused
       background-color #f3f4f5
